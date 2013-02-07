@@ -55,4 +55,9 @@ public class TagFloat extends Tag {
 		}
 		return false;
 	}
+	public void print(int indices)
+	{
+		System.out.println(getSpacing(indices) + "TAG_Float('" + this.getName() + "'): " + this.data);
+	}
+
 }

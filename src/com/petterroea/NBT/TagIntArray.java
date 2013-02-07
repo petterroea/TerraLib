@@ -59,4 +59,9 @@ public class TagIntArray extends Tag {
 		}
 		return false;
 	}
+	public void print(int indices)
+	{
+		System.out.println(getSpacing(indices) + "TAG_Int_Array('" + this.getName() + "'): [" + this.data.length + " integers]");
+	}
+
 }

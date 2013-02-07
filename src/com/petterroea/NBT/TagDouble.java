@@ -53,4 +53,9 @@ public class TagDouble extends Tag {
 		}
 		return false;
 	}
+	public void print(int indices)
+	{
+		System.out.println(getSpacing(indices) + "TAG_Double('" + this.getName() + "'): " + this.data);
+	}
+
 }

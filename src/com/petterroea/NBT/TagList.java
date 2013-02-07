@@ -90,4 +90,22 @@ public class TagList<T extends Tag> extends Tag {
 		}
 		return false;
 	}
+    public void print(int indices)
+	{
+		if(this.getName().equals("")||this.getName()==null)
+		{
+			System.out.println(getSpacing(indices) + "TAG_List(None (" + Tag.getTagName(this.type) + ")): " + list.size() + " entries");
+		}
+		else
+		{
+			System.out.println(getSpacing(indices) + "TAG_List('" + this.getName() + "' (" + Tag.getTagName(this.type) + ")): " + list.size() + " entries");
+		}
+		System.out.println(getSpacing(indices)+"{");
+		for(int i = 0; i < list.size(); i++)
+		{
+			list.get(i).print(indices+4);
+		}
+		System.out.println(getSpacing(indices)+"}");
+	}
+
 }

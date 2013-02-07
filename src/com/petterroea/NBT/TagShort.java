@@ -55,4 +55,9 @@ public class TagShort extends Tag {
 		}
 		return false;
 	}
+	public void print(int indices)
+	{
+		System.out.println(getSpacing(indices) + "TAG_Short('" + this.getName() + "'): " + this.data);
+	}
+
 }

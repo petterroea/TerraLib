@@ -54,5 +54,9 @@ public class TagByte extends Tag {
 		}
 		return false;
 	}
+	public void print(int indices)
+	{
+		System.out.println(getSpacing(indices) + "TAG_Byte('" + this.getName() + "'): " + this.data);
+	}
 
 }

@@ -55,4 +55,9 @@ public class TagInt extends Tag {
 		}
 		return false;
 	}
+	public void print(int indices)
+	{
+		System.out.println(getSpacing(indices) + "TAG_Int('" + this.getName() + "'): " + this.data);
+	}
+
 }

@@ -26,7 +26,6 @@ public class TagCompound extends Tag {
 			t = Tag.readNamedTag(is);
 		}
 	}
-
 	@Override
 	public void write(DataOutputStream os) throws IOException {
 		for(Tag t : map.values())
@@ -74,5 +73,22 @@ public class TagCompound extends Tag {
 			return t.map.equals(this.map);
 		}
 		return false;
+	}
+	public void print(int indices)
+	{
+		if(this.getName().equals("")||this.getName()==null)
+		{
+			System.out.println(getSpacing(indices) + "TAG_Compound(None): " + map.size() + " entries");
+		}
+		else
+		{
+			System.out.println(getSpacing(indices) + "TAG_Compound('" + this.getName() + "'): " + map.size() + " entries");
+		}
+		System.out.println(getSpacing(indices)+"{");
+		for(Tag t : map.values())
+		{
+			t.print(indices+4);
+		}
+		System.out.println(getSpacing(indices)+"}");
 	}
 }

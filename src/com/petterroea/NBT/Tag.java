@@ -2,7 +2,10 @@ package com.petterroea.NBT;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.zip.GZIPInputStream;
 
 public abstract class Tag {
 	public static final byte TAG_End = 0;
@@ -46,7 +49,28 @@ public abstract class Tag {
 		if(name==null) { this.name=""; return; }
 		this.name=name;
 	}
-	
+	/**
+	 * Used for printing. Ignore
+	 * @param indices
+	 * @return As many spaces as the int <indices>
+	 */
+	protected String getSpacing(int indices)
+	{
+		String s = "";
+		for(int i = 0; i < indices; i++)
+		{
+			s=s+" ";
+		}
+		return s;
+	}
+	/**
+	 * Prints the tag to stdout
+	 * @param indices Amount of spaces before the text
+	 */
+	public void print(int indices)
+	{
+		System.out.println(getSpacing(indices) + "(ERROR: The tag of id " + getId() + " does not have a print() function!)");
+	}
 	@Override
 	public boolean equals(Object o)
 	{
@@ -64,7 +88,7 @@ public abstract class Tag {
 		try {
 			byte b = dis.readByte();
 			Tag t = null;
-			if(b==TAG_End) t = new TagEnd();
+			if(b==TAG_End) { t = new TagEnd(); return t; }
 			String name = dis.readUTF();
 			if(b==TAG_Byte) t = new TagByte(name);
 			if(b==TAG_Short) t = new TagShort(name);
@@ -82,6 +106,7 @@ public abstract class Tag {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.exit(0);
 		}
 		return null;
 	}
@@ -106,5 +131,55 @@ public abstract class Tag {
 		if(type==TAG_Int_Array) return new TagIntArray(name);
  		return null;
 	}
-
+	public static TagCompound readCompressed(DataInputStream dis)
+	{
+		try {
+			GZIPInputStream stream = new GZIPInputStream(dis);
+			DataInputStream str = new DataInputStream(stream);
+			byte type = str.readByte();
+			if(type!=TAG_Compound) return null;
+			String name = str.readUTF();
+			TagCompound compound = new TagCompound(name);
+			compound.read(str);
+			return compound;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public static TagCompound readFile(File f, boolean compressed) throws IOException
+	{
+		if(!f.exists()) throw new IOException("The file specified cannot be found");
+		DataInputStream is = null;
+		if(compressed)
+		{
+			is = new DataInputStream(new GZIPInputStream(new FileInputStream(f)));
+		}
+		else
+		{
+			is = new DataInputStream(new FileInputStream(f));
+		}
+		byte type = is.readByte();
+		if(type != TAG_Compound) return null;
+		String name = is.readUTF();
+		TagCompound tag = new TagCompound(name);
+		tag.read(is);
+		return tag;
+	}
+	public static String getTagName(byte type) {
+		if(type==TAG_End) return "tag_end";
+		if(type==TAG_Byte) return "tag_byte";
+		if(type==TAG_Short) return "tag_short";
+		if(type==TAG_Int) return "tag_int";
+		if(type==TAG_Long) return "tag_long";
+		if(type==TAG_Float) return "tag_float";
+		if(type==TAG_Double) return "tag_double";
+		if(type==TAG_Byte_Array) return "tag_byte_array";
+		if(type==TAG_String) return "tag_string";
+		if(type==TAG_List) return "tag_list";
+		if(type==TAG_Compound) return "tag_compound";
+		if(type==TAG_Int_Array) return "tag_int_array";
+		return "UNKNOWN";
+	}
 }
